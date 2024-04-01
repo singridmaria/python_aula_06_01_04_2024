@@ -33,3 +33,24 @@ class AppBD():
             cursor = self.connection.cursor()
             cursor.execute(insert_query,(name,price))
             self.connection.commit()
+        except sqlite3.Error as error:
+            print("Falha ao inserir dados", error)
+        finally:
+            if self.connection:
+                cursor.close()
+                self.connection.close()
+                print("A conexão com o sqlite foi fechada")
+    def select_all_products(sel):
+        select_query = "SELECT * FROM products"
+        products = []
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(select_query)
+            products = cursor.fetchall()
+        except sqlite3.Error as error:
+            print("Falha ao selecionar dados", error)
+        finally:
+            if self.connection:
+                cursor.close()
+                self.connection.close()
+                print("A conexão com o sqlite foi fechada")
