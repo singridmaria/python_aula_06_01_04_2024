@@ -25,7 +25,9 @@ class AppBD():
                 self.connection.close()
                 print("A conexão com o sqlite foi fechada")
 
-    def inserirDados(self):
+    #FUNÇÃO PARA INSERIR DADOS
+
+    def inserirDados(self,name,price):
         self.abrirConexao()
         insert_query = """INSERT INTO product(name,price) VALUES (?,?)"""
 
@@ -40,7 +42,10 @@ class AppBD():
                 cursor.close()
                 self.connection.close()
                 print("A conexão com o sqlite foi fechada")
-    def select_all_products(sel):
+
+    #FUNÇÃO PARA SELECIONAR TODOS OS DADOS
+                
+    def select_all_products(self):
         select_query = "SELECT * FROM products"
         products = []
         try:
@@ -49,6 +54,42 @@ class AppBD():
             products = cursor.fetchall()
         except sqlite3.Error as error:
             print("Falha ao selecionar dados", error)
+        finally:
+            if self.connection:
+                cursor.close()
+                self.connection.close()
+                print("A conexão com o sqlite foi fechada")
+
+    #FUNÇÃO PARA ATUALIZAR OS DADOS
+    
+    def update_products(self,product_id,name,price):
+        self.abrirConexao()
+        update_query = """UPDATE products SET name = ?, price = ? WHERE id = ?"""
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(update_query,(product_id,name,price))
+            self.connection.commit()
+            print("Produto atualizado com sucesso")
+        except sqlite3.Error as error:
+            print("Falha ao atualizar dados", error)
+        finally:
+            if self.connection:
+                cursor.close()
+                self.connection.close()
+                print("A conexão com o sqlite foi fechada")
+
+    #FUNÇÃO PARA DELETAR OS DADOS
+
+    def delete_products(self,product_id):
+        self.abrirConexao()
+        delete_query = """DELETE FROM products WHERE id = ?"""
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(delete_query,(product_id))
+            self.connection.commit()
+            print("Produto deletado com sucesso")
+        except sqlite3.Error as error:
+            print("Falha ao deletar dados", error)
         finally:
             if self.connection:
                 cursor.close()
