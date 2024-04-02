@@ -1,6 +1,9 @@
 import sqlite3
 
 class AppBD():
+    def __init__(self):
+        self.create_table()
+
     def abrirConexao(self):
         try:
             self.connection = sqlite3.connect('database.db')
@@ -11,7 +14,7 @@ class AppBD():
         self.abrirConexao()
         create_table_query = """CREATE TABLE IF NOT EXISTS products(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL
+            name TEXT NOT NULL,
             price REAL NOT NULL);"""
         try:
             cursor = self.connection.cursor()
