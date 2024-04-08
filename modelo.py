@@ -8,11 +8,13 @@ class AppBD():
         try:
             self.connection = sqlite3.connect('database.db')
         except sqlite3.Error as error:
-            print("Falha ao se conectar ao banco de dados", error)
+            if(self.connection):
+                print("Falha ao se conectar ao Banco de Dados", error)
 
     def create_table(self):
         self.abrirConexao()
-        create_table_query = """CREATE TABLE IF NOT EXISTS products(
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS products(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             price REAL NOT NULL);"""
@@ -32,12 +34,13 @@ class AppBD():
 
     def inserirDados(self,name,price):
         self.abrirConexao()
-        insert_query = """INSERT INTO product(name,price) VALUES (?,?)"""
+        insert_query = """INSERT INTO products (name,price) VALUES (?,?)"""
 
         try:
             cursor = self.connection.cursor()
             cursor.execute(insert_query,(name,price))
             self.connection.commit()
+            print("Produto inserido com sucesso")
         except sqlite3.Error as error:
             print("Falha ao inserir dados", error)
         finally:
@@ -49,6 +52,7 @@ class AppBD():
     #FUNÇÃO PARA SELECIONAR TODOS OS DADOS
                 
     def select_all_products(self):
+        self.abrirConexao()
         select_query = "SELECT * FROM products"
         products = []
         try:
@@ -62,6 +66,7 @@ class AppBD():
                 cursor.close()
                 self.connection.close()
                 print("A conexão com o sqlite foi fechada")
+        return products
 
     #FUNÇÃO PARA ATUALIZAR OS DADOS
     
@@ -70,7 +75,7 @@ class AppBD():
         update_query = """UPDATE products SET name = ?, price = ? WHERE id = ?"""
         try:
             cursor = self.connection.cursor()
-            cursor.execute(update_query,(product_id,name,price))
+            cursor.execute(update_query,(name,price,product_id))
             self.connection.commit()
             print("Produto atualizado com sucesso")
         except sqlite3.Error as error:
