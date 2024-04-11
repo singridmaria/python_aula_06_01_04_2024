@@ -22,10 +22,16 @@ class PrincipalBD():
         self.lblPreco.pack()
         self.entryPreco = tk.Entry(self.janela)
         self.entryPreco.pack()
+        
         self.btnCadastrar = tk.Button(self.janela, text="Adicionar", command=self.CadastrarProduto)
-        self.btnCadastrar.pack()
-        self.btnAtualizar = tk.Button(self.janela, text="Atualziar", command=self.AtualizarProduto)
-        self.btnAtualizar.pack()
+        self.btnAtualizar = tk.Button(self.janela, text="Atualizar", command=self.AtualizarProduto)
+        self.btnExcluir = tk.Button(self.janela, text="Excluir", command=self.ExcluirProduto)
+
+       
+        self.btnCadastrar.pack(padx=5, pady=5)
+        self.btnAtualizar.pack(padx=5, pady=5)
+        self.btnExcluir.pack(padx=5, pady=5)
+
     
     def ExibirTela(self):
         try:
@@ -49,7 +55,23 @@ class PrincipalBD():
 
         except:
             print("Não foi possível fazer o cadastro")
-            
+
+    def ExcluirProduto(self):
+        try:
+            selected_item = self.treeProdutos.selection()
+            if not selected_item:
+                return
+            item = self.treeProdutos.item(selected_item)
+            print(item)
+            product = item['values']
+            product_id = product[0]
+            self.objBD.delete_products(product_id)
+            self.ExibirTela()
+            print("Produto excluído com sucesso")
+        
+        except:
+            print("não foi possível excluir")
+
     def AtualizarProduto(self):
         try:
             selected_item = self.treeProdutos.selection()
